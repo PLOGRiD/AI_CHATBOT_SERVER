@@ -3,3 +3,9 @@ venv/
 __pycache__/
 *.pyc
 .env
+
+# RAG vector DB (재생성 가능한 산출물)
+rag/chroma_db/
+
+# Claude Code
+CLAUDE.md
