@@ -5,7 +5,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
-from constants import CATEGORIES, RECYCLABLE_SUBCATEGORIES
+from app.constants import CATEGORIES, RECYCLABLE_SUBCATEGORIES
 from prompt.vision_prompt import VISION_SYSTEM_PROMPT
 
 load_dotenv()

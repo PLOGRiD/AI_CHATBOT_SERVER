@@ -7,7 +7,7 @@ from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from pydantic import BaseModel, Field
 
-from constants import CATEGORIES, RECYCLABLE_SUBCATEGORIES
+from app.constants import CATEGORIES, RECYCLABLE_SUBCATEGORIES
 from prompt.waste_disposal_prompt import (
     ITEM_EXTRACT_SYSTEM_PROMPT,
     MATCH_VERIFY_SYSTEM_PROMPT,

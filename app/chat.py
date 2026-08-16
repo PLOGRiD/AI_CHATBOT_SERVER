@@ -1,7 +1,7 @@
 from langchain_core.messages import HumanMessage
 
-from agent import run_agent
-from vision import analyze_image
+from app.agent import run_agent
+from app.vision import analyze_image
 
 
 async def run_chat(
