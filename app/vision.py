@@ -46,3 +46,22 @@ async def analyze_image(image_bytes: bytes) -> ImageAnalysis:
         ]
     )
     return result
+
+
+async def analyze_image_url(image_url: str) -> ImageAnalysis:
+    structured_model = _VISION_MODEL.with_structured_output(ImageAnalysis)
+
+    result: ImageAnalysis = await structured_model.ainvoke(
+        [
+            SystemMessage(content=VISION_SYSTEM_PROMPT),
+            HumanMessage(
+                content=[
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": image_url},
+                    }
+                ]
+            ),
+        ]
+    )
+    return result

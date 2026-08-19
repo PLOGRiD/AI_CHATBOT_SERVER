@@ -3,10 +3,12 @@ import json
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from pydantic import TypeAdapter, ValidationError
 
-from api.schemas import ChatMessage, ChatResponse
+from api.schemas import ChatMessage, ChatResponse, ImageDisposalResponse, ImageUrlRequest
 from app.chat import run_chat
+from app.waste_lookup import get_disposal_by_image_url
 
 router = APIRouter(prefix="/api/v1/chat", tags=["chat"])
+waste_router = APIRouter(prefix="/api/v1/waste", tags=["waste"])
 
 _HISTORY_ADAPTER = TypeAdapter(list[ChatMessage])
 
@@ -39,3 +41,8 @@ async def chat(
     )
 
     return ChatResponse(answer=answer)
+
+@waste_router.post("", response_model=ImageDisposalResponse)
+async def image_disposal(body: ImageUrlRequest) -> ImageDisposalResponse:
+    answer = await get_disposal_by_image_url(str(body.image_url))
+    return ImageDisposalResponse(answer=answer)

@@ -165,6 +165,11 @@ async def _resolve_context(item_names, category, subcategory):
     return None
 
 
+async def resolve_disposal_by_item(item_names: list[str], category: str, subcategory: str | None) -> str:
+    context_text = await _resolve_context(item_names, category, subcategory)
+    return context_text or "해당 품목의 분리배출 정보를 찾지 못했습니다."
+
+
 @tool
 async def waste_disposal_lookup(item_description: str) -> str:
     """사용자가 버리려는 물건의 분리배출/재활용 방법을 조회한다.
@@ -180,5 +185,4 @@ async def waste_disposal_lookup(item_description: str) -> str:
     if extracted.category == "해당없음":
         return "그건 분리배출 안내 대상이 아닌 것 같습니다."
 
-    context_text = await _resolve_context(extracted.item_names, extracted.category, extracted.subcategory)
-    return context_text or "해당 품목의 분리배출 정보를 찾지 못했습니다."
+    return await resolve_disposal_by_item(extracted.item_names, extracted.category, extracted.subcategory)
