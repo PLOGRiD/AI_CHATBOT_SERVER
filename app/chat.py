@@ -1,13 +1,24 @@
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 
 from app.agent import run_agent
 from app.vision import analyze_image
+
+
+def _to_lc_messages(history: list[dict]) -> list[BaseMessage]:
+    messages: list[BaseMessage] = []
+    for turn in history:
+        if turn["role"] == "user":
+            messages.append(HumanMessage(content=turn["content"]))
+        else:
+            messages.append(AIMessage(content=turn["content"]))
+    return messages
 
 
 async def run_chat(
     session_id: str,
     message: str | None,
     image_bytes: bytes | None,
+    history: list[dict] | None = None,
 ) -> str:
     context_parts = []
 
@@ -26,4 +37,5 @@ async def run_chat(
 
     user_content = "\n\n".join(context_parts) if context_parts else "(첨부된 이미지를 분석해줘)"
 
-    return await run_agent([HumanMessage(content=user_content)])
+    history_messages = _to_lc_messages(history or [])
+    return await run_agent([*history_messages, HumanMessage(content=user_content)])
