@@ -7,5 +7,4 @@ class ChatMessage(BaseModel):
     content: str
 
 class ChatResponse(BaseModel):
-    session_id: str
     answer: str | None

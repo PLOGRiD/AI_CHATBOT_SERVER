@@ -15,7 +15,6 @@ def _to_lc_messages(history: list[dict]) -> list[BaseMessage]:
 
 
 async def run_chat(
-    session_id: str,
     message: str | None,
     image_bytes: bytes | None,
     history: list[dict] | None = None,

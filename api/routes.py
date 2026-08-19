@@ -12,7 +12,6 @@ _HISTORY_ADAPTER = TypeAdapter(list[ChatMessage])
 
 @router.post("", response_model=ChatResponse)
 async def chat(
-    session_id: str = Form(...),
     message: str | None = Form(None),
     image: UploadFile | None = File(None),
     history: str | None = Form(None),
@@ -34,10 +33,9 @@ async def chat(
         image_bytes = await image.read()
 
     answer = await run_chat(
-        session_id=session_id,
         message=message,
         image_bytes=image_bytes,
         history=[turn.model_dump() for turn in chat_history],
     )
 
-    return ChatResponse(session_id=session_id, answer=answer)
+    return ChatResponse(answer=answer)
