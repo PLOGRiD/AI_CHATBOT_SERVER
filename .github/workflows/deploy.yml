@@ -1,0 +1,46 @@
+name: Deploy to Development Server
+
+on:
+  push:
+    branches: [ "develop" ]
+  workflow_dispatch:
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: dlthwjd1629/plogrid-chat-bot:latest
+
+  CD:
+    needs: CI
+    runs-on: ubuntu-latest
+    env:
+      APP_PATH: ${{ secrets.APP_PATH }}
+
+    steps:
+      - name: SSH deploy on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.INSTANCE_HOST }}
+          username: ${{ secrets.INSTANCE_USER }}
+          key: ${{ secrets.SECRET_KEY }}
+          script: |
+            cd ${{ env.APP_PATH }}
+            docker pull dlthwjd1629/plogrid-chat-bot:latest
+            docker compose up -d --no-deps plogrid-chat-bot
+            docker image prune -f
