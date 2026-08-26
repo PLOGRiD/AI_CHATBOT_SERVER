@@ -40,6 +40,7 @@ jobs:
           username: ${{ secrets.INSTANCE_USER }}
           key: ${{ secrets.SECRET_KEY }}
           script: |
+            set -e
             cd ${{ env.APP_PATH }}
             docker pull dlthwjd1629/plogrid-chat-bot:latest
             docker compose up -d --no-deps plogrid-chat-bot
